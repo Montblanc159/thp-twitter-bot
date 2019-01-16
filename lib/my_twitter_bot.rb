@@ -16,8 +16,8 @@ def login_twitter
   return client
 end
 
-def send_tweet(login_twitter)
-  login_twitter.update('Mon premier tweet en Ruby !!!!')
+def send_tweet(message)
+  login_twitter.update(message)
 end
 
 def journalist_array
@@ -28,11 +28,33 @@ def select_journalists(journalist_array)
   selected_journalists = journalist_array.sample(5)
 end
 
-def thank_journalists(selected_journalists)
-  journalists = selected_journalists
+def thank_journalists(select_journalists)
+  journalists = select_journalists
   journalists.each do |journalist|
-    login_twitter.update("#{journalist} merci pour vos superbes articles !")
+    send_tweet("#{journalist} À l'abordage ! @thehackingpro #bonjour_monde")
   end
 end
 
-def like_25_bonjour
+def perform_tweet_journalists
+  thank_journalists(select_journalists(journalist_array))
+end
+
+def find_bonjour
+  bonjour_s = []
+  login_twitter.search("#bonjour_monde", result_type: "recent").take(25).collect do |tweet|
+    bonjour_s.push(tweet)
+  end
+  return bonjour_s
+end
+
+def like_bonjour
+  find_bonjour.each do |bonjour|
+    login_twitter.favorite(bonjour)
+  end
+end
+
+def follow_bonjour
+  find_bonjour.each do |bonjour|
+    login_twitter.follow(bonjour.user.id)
+  end
+end
