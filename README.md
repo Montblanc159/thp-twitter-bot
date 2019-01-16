@@ -2,4 +2,4 @@
 
 Mon **premier** bot twitter !
 
-_Créé par _
+_Créé par Guillaume Zaugg avec l'aide de THP_

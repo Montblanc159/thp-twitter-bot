@@ -3,6 +3,7 @@
 require 'pry'
 require 'twitter'
 require 'dotenv'
+require 'colorize'
 
 Dotenv.load
 
@@ -14,6 +15,16 @@ def login_twitter
     config.access_token_secret = ENV["TWITTER_ACCESS_TOKEN_SECRET"]
   end
   return client
+end
+
+def login_twitter_stream
+  s_client = Twitter::Streaming::Client.new do |config|
+    config.consumer_key        = ENV["TWITTER_API_KEY"]
+    config.consumer_secret     = ENV["TWITTER_API_SECRET"]
+    config.access_token        = ENV["TWITTER_ACCESS_TOKEN"]
+    config.access_token_secret = ENV["TWITTER_ACCESS_TOKEN_SECRET"]
+  end
+  return s_client
 end
 
 def send_tweet(message)
@@ -41,7 +52,7 @@ end
 
 def find_bonjour
   bonjour_s = []
-  login_twitter.search("#bonjour_monde", result_type: "recent").take(25).collect do |tweet|
+  login_twitter.search("#bonjour_monde", result_type: "recent").take(5).collect do |tweet|
     bonjour_s.push(tweet)
   end
   return bonjour_s
@@ -55,6 +66,20 @@ end
 
 def follow_bonjour
   find_bonjour.each do |bonjour|
-    login_twitter.follow(bonjour.user.id)
+    unless bonjour.user.id == login_twitter.user.id
+      login_twitter.follow(bonjour.user.id)
+    end
   end
 end
+
+def live_check_bonjour
+  login_twitter_stream.filter(track: "#bonjour_monde") do |object|
+    # login_twitter.favorite(object)
+    puts "You liked : #{object.text.colorize(:blue)} from #{object.user.name.colorize(:red)}"
+    # unless login_twitter.user.id == object.user.id
+    #   login_twitter.follow(object.user.id)
+    # end
+  end
+end
+send_tweet("#bonjour_monde @guhurak")
+live_check_bonjour
