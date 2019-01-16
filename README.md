@@ -2,4 +2,4 @@
 
 Mon **premier** bot twitter !
 
-*Créé par *
+_Créé par _

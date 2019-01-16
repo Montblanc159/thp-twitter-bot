@@ -26,6 +26,13 @@ end
 
 def select_journalists(journalist_array)
   selected_journalists = journalist_array.sample(5)
-  puts selected_journalists
-  puts selected_journalists
 end
+
+def thank_journalists(selected_journalists)
+  journalists = selected_journalists
+  journalists.each do |journalist|
+    login_twitter.update("#{journalist} merci pour vos superbes articles !")
+  end
+end
+
+def like_25_bonjour

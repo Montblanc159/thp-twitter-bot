@@ -7,8 +7,3 @@ require_relative '../lib/my_twitter_bot'
 #     expect(login_twitter).not_to be_nil
 #   end
 # end
-
-describe "should return 5 journalists"
- it "should return the same arrays" do
-   expect(select_journalists)
- end
